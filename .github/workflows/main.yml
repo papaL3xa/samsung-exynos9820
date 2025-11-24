@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        model: [ "N971N,N976N" ]
+        model: [ "N970F" ]
 
     steps:
       - uses: actions/checkout@v4
@@ -52,16 +52,13 @@ jobs:
 
       - name: Setup KernelSU
         run: |
-          if [ -d "./KernelSU" ]; then
-            rm -rf "./KernelSU"
+          if [ -d "./KernelSU-Next" ]; then
+            rm -rf "./KernelSU-Next"
           fi
           if [ -d "./drivers/kernelsu" ]; then
             rm -rf "./drivers/kernelsu"
           fi
-          curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
-          wget -q "https://raw.githubusercontent.com/Star-Seven/samsung-exynos9820/kernelsu/kernelsu.patch" -O KernelSU.patch
-          git apply ./KernelSU.patch
-          model=$(echo "${{ matrix.model }}" | cut -d ',' -f 1)
+          curl -LSs "https://raw.githubusercontent.com/GoRhanHee/KernelSU-Next/refs/heads/next/kernel/setup.sh" | bash -s v18892         model=$(echo "${{ matrix.model }}" | cut -d ',' -f 1)
           case $model in
             G970F|G973F|G975F)
               config=exynos9820-beyond0lte_defconfig
@@ -96,7 +93,7 @@ jobs:
           ./cruelbuild config                    \
                        os_patch_level=2099-12    \
                        model=${{ matrix.model }} \
-                       name="Star7-KernelSU-v2.3"\
+                       name="SkyLine-KernelSU-v1.0"\
                        toolchain=$TOOLCHAIN      \
                        -magisk                   \
                        +nohardening              \
